@@ -1,35 +1,43 @@
 "use client";
 
-import Stack from "@mui/material/Stack";
+import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
+import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 
 import AddRoundedIcon from "@mui/icons-material/AddRounded";
 import RemoveRoundedIcon from "@mui/icons-material/RemoveRounded";
 
-interface QuantitySelectorProps {
+interface QuantityStepperProps {
   value: number;
 
   onChange: (value: number) => void;
+
+  min?: number;
+
+  max?: number;
 }
 
-export default function QuantitySelector({
+export default function QuantityStepper({
   value,
   onChange,
-}: QuantitySelectorProps) {
+  min = 1,
+  max,
+}: QuantityStepperProps) {
   const decrease = () => {
-    if (value > 1) {
-      onChange(value - 1);
-    }
+    if (value <= min) return;
+
+    onChange(value - 1);
   };
 
   const increase = () => {
+    if (max && value >= max) return;
+
     onChange(value + 1);
   };
 
   return (
-    <Stack
-      spacing={2}
+    <Box
       sx={{
         mt: 5,
       }}
@@ -47,45 +55,48 @@ export default function QuantitySelector({
 
       <Stack
         direction="row"
-        spacing={2}
+        alignItems="center"
+        justifyContent="space-between"
         sx={{
-          alignItems: "center",
+          mt: 2,
+
+          p: 1,
+
+          borderRadius: 999,
+
+          border: "1px solid",
+
+          borderColor: "divider",
+
+          bgcolor: "background.paper",
         }}
       >
-        <IconButton
-          onClick={decrease}
-          sx={{
-            width: 48,
-            height: 48,
-            border: "1px solid",
-            borderColor: "divider",
-          }}
-        >
+        <IconButton onClick={decrease} disabled={value <= min}>
           <RemoveRoundedIcon />
         </IconButton>
 
         <Typography
           sx={{
-            width: 48,
-            textAlign: "center",
-            fontSize: 24,
             fontWeight: 700,
+
+            fontSize: 22,
+
+            minWidth: 32,
+
+            textAlign: "center",
           }}
         >
           {value}
         </Typography>
 
         <IconButton
-          onClick={increase}
           color="primary"
-          sx={{
-            width: 48,
-            height: 48,
-          }}
+          onClick={increase}
+          disabled={max ? value >= max : false}
         >
           <AddRoundedIcon />
         </IconButton>
       </Stack>
-    </Stack>
+    </Box>
   );
 }

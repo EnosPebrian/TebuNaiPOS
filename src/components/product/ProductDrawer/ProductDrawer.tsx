@@ -9,7 +9,7 @@ import CraftedFrom from "./CraftedFrom";
 import VariantSelector from "./VariantSelector";
 import AddToOrderButton from "./AddToOrderButton";
 import OrderSummary from "./OrderSummary";
-import QuantitySelector from "./QuantitySelector";
+import QuantityStepper from "@/components/common/QuantityStepper";
 import { OrderItem } from "@/domain/order/types";
 import { useOrderContext } from "@/domain/order/OrderContext";
 import { Product } from "@/data/products";
@@ -114,7 +114,7 @@ export default function ProductDrawer({
           onChange={setSelectedVariant}
         />
 
-        <QuantitySelector value={quantity} onChange={setQuantity} />
+        <QuantityStepper value={quantity} onChange={setQuantity} />
 
         <OrderSummary product={product} variant={selectedVariant} />
 
