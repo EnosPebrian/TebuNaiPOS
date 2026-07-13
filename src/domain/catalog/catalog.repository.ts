@@ -1,14 +1,14 @@
 import { Category } from "./category";
 import { Ingredient } from "./ingredient";
 import { MenuItem } from "./menu-item";
-import { ProductPackage } from "./package";
+import { Package } from "./package";
 
 export interface CatalogRepository {
   getCategories(): Category[];
 
   getIngredients(): Ingredient[];
 
-  getPackages(): ProductPackage[];
+  getPackages(): Package[];
 
   getMenuItems(): MenuItem[];
 }
