@@ -90,4 +90,50 @@ export const toppings: Topping[] = [
     enabled: true,
     sortOrder: 9,
   },
+  {
+    id: "turmeric",
+
+    slug: "turmeric",
+
+    name: "Turmeric",
+
+    icon: "🌿",
+
+    extraPrice: 3000,
+
+    enabled: true,
+
+    sortOrder: 10,
+  },
+  {
+    id: "strawberry",
+
+    slug: "strawberry",
+
+    name: "Strawberry",
+
+    icon: "🍓",
+
+    extraPrice: 3000,
+
+    enabled: true,
+
+    sortOrder: 11,
+  },
+
+  {
+    id: "kedondong",
+
+    slug: "kedondong",
+
+    name: "Kedondong",
+
+    icon: "🥭",
+
+    extraPrice: 3000,
+
+    enabled: true,
+
+    sortOrder: 12,
+  },
 ];

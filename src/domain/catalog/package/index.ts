@@ -1,2 +1,2 @@
 export * from "./package";
-export * from "./package-data";
+export * from "./package-seed";
