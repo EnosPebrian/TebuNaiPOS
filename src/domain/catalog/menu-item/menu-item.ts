@@ -1,3 +1,9 @@
+interface IngredientSelection {
+  ingredientId: string;
+
+  quantity: number;
+}
+
 export interface MenuItem {
   id: string;
 
@@ -11,7 +17,7 @@ export interface MenuItem {
 
   accentColor: string;
 
-  defaultIngredientIds: string[];
+  defaultIngredientIds: IngredientSelection[];
 
   availablePackageIds: string[];
 
