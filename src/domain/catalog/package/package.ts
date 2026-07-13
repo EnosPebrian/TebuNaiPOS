@@ -1,0 +1,15 @@
+export interface ProductPackage {
+  id: string;
+
+  name: string;
+
+  container: "bottle" | "cup" | "jug";
+
+  volume: number;
+
+  unit: string;
+
+  basePrice: Money;
+
+  available: boolean;
+}
