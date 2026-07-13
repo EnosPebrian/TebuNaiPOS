@@ -1,38 +1,43 @@
-import { categories } from "./category";
-import { ingredients } from "./ingredient";
-import { menuItems } from "./menu-item";
-import { packages } from "./package";
+import { catalogRepository } from "./inMemoryCatalogRepository";
 
 export const catalog = {
   getCategories() {
-    return categories;
+    return catalogRepository.getCategories();
   },
 
   getCategory(id: string) {
-    return categories.find((c) => c.id === id);
+    return catalogRepository.getCategory(id);
   },
 
-  getIngredients() {
-    return ingredients;
+  getProducts() {
+    return catalogRepository.getProducts();
   },
 
-  getIngredient(id: string) {
-    return ingredients.find((i) => i.id === id);
+  getProduct(id: string) {
+    return catalogRepository.getProduct(id);
   },
 
   getPackages() {
-    return packages;
+    return catalogRepository.getPackages();
   },
 
   getPackage(id: string) {
-    return packages.find((p) => p.id === id);
+    return catalogRepository.getPackage(id);
   },
 
-  getMenuItems() {
-    return menuItems;
+  getToppings() {
+    return catalogRepository.getToppings();
   },
 
-  getMenuItem(id: string) {
-    return menuItems.find((m) => m.id === id);
+  getTopping(id: string) {
+    return catalogRepository.getTopping(id);
+  },
+
+  getPresets() {
+    return catalogRepository.getPresets();
+  },
+
+  getPreset(id: string) {
+    return catalogRepository.getPreset(id);
   },
 };
