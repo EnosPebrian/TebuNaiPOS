@@ -1,15 +1,17 @@
+import { Money } from "@/domain/money";
+
 export interface Package {
   id: string;
 
   name: string;
 
-  container: "bottle" | "cup" | "jug";
-
   volume: number;
 
-  unit: string;
+  unit: "ml";
 
   basePrice: Money;
 
-  available: boolean;
+  enabled: boolean;
+
+  sortOrder: number;
 }

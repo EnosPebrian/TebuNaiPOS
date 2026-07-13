@@ -2,32 +2,32 @@ import { Package } from "./package";
 
 export const packages: Package[] = [
   {
-    id: "bottle-250",
+    id: "250ml",
     name: "Personal Bottle",
-    container: "bottle",
     volume: 250,
     unit: "ml",
     basePrice: 12000,
-    available: true,
+    enabled: true,
+    sortOrder: 1,
   },
 
   {
-    id: "bottle-500",
+    id: "500ml",
     name: "Everyday Bottle",
-    container: "bottle",
     volume: 500,
     unit: "ml",
     basePrice: 17000,
-    available: true,
+    enabled: true,
+    sortOrder: 2,
   },
 
   {
-    id: "bottle-1500",
+    id: "1500ml",
     name: "Family Bottle",
-    container: "bottle",
     volume: 1500,
     unit: "ml",
     basePrice: 35000,
-    available: true,
+    enabled: true,
+    sortOrder: 3,
   },
 ];
