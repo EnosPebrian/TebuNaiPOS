@@ -1,5 +1,5 @@
 import { Money } from "@/domain/money";
-import { PriceLine } from "./priceLine";
+import { PricingLine } from "./pricingLine";
 
 /**
  * Result returned by the pricing engine.
@@ -8,7 +8,7 @@ export interface PricingResult {
   /**
    * All receipt lines.
    */
-  lines: PriceLine[];
+  lines: PricingLine[];
 
   /**
    * Total before discounts.

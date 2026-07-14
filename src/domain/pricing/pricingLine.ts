@@ -1,37 +1,35 @@
 import { Money } from "@/domain/money";
 
-/**
- * One line shown in
- * an order summary,
- * receipt,
- * or invoice.
- */
-export interface PriceLine {
+export type PricingLineType = "package" | "topping" | "discount" | "charge";
+
+export interface PricingLine {
   /**
    * Unique identifier.
    */
   id: string;
 
   /**
+   * Line type.
+   */
+  type: PricingLineType;
+
+  /**
    * Display label.
-   *
-   * Example:
-   * 500 ml Bottle
    */
   label: string;
 
   /**
-   * Quantity of this line.
+   * Quantity.
    */
   quantity: number;
 
   /**
-   * Unit price.
+   * Price for one unit.
    */
   unitPrice: Money;
 
   /**
-   * Total for this line.
+   * Total price.
    */
   total: Money;
 }
