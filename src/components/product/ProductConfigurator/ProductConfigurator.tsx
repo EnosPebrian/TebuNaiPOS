@@ -5,14 +5,15 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Divider from "@mui/material/Divider";
 import Button from "@mui/material/Button";
-
+import { useState } from "react";
 import { ConfiguredProduct } from "@/domain/product";
+import { catalog } from "@/domain/catalog";
+import PackageSelector from "./PackageSelector";
+import ToppingSelector from "./ToppingSelector";
 
 interface ProductConfiguratorProps {
   open: boolean;
-
   onClose: () => void;
-
   configuredProduct: ConfiguredProduct;
 }
 
@@ -21,6 +22,16 @@ export default function ProductConfigurator({
   onClose,
   configuredProduct,
 }: ProductConfiguratorProps) {
+  const product = catalog.getProduct(configuredProduct.productId);
+
+  if (!product) {
+    return null;
+  }
+
+  const [configuration, setConfiguration] = useState(
+    configuredProduct.configuration,
+  );
+
   return (
     <Drawer
       anchor="right"
@@ -37,13 +48,9 @@ export default function ProductConfigurator({
         },
       }}
     >
-      <Box
-        sx={{
-          p: 4,
-        }}
-      >
+      <Box sx={{ p: 4 }}>
         <Typography variant="h4" fontWeight={700}>
-          Product Configurator
+          {product.name}
         </Typography>
 
         <Typography
@@ -52,50 +59,50 @@ export default function ProductConfigurator({
             mt: 1,
           }}
         >
-          This is the new Commerce Engine.
+          {product.description}
         </Typography>
 
-        <Divider
-          sx={{
-            my: 4,
-          }}
+        <Divider sx={{ my: 4 }} />
+
+        <Typography variant="subtitle2" gutterBottom>
+          Package
+        </Typography>
+
+        <PackageSelector
+          value={configuration.packageId}
+          onChange={(packageId) =>
+            setConfiguration({
+              ...configuration,
+              packageId,
+            })
+          }
         />
 
-        <Typography variant="body2">Product ID</Typography>
+        <Divider sx={{ my: 4 }} />
 
-        <Typography fontWeight={700}>{configuredProduct.productId}</Typography>
+        <Typography variant="subtitle2" gutterBottom>
+          Choose Toppings
+        </Typography>
 
-        <Divider
-          sx={{
-            my: 4,
-          }}
+        <ToppingSelector
+          value={configuration.toppingIds}
+          onChange={(toppingIds) =>
+            setConfiguration({
+              ...configuration,
+              toppingIds,
+            })
+          }
         />
-
-        <Typography variant="body2">Package</Typography>
-
-        <Typography>{configuredProduct.configuration.packageId}</Typography>
-
-        <Divider
-          sx={{
-            my: 4,
-          }}
-        />
-
-        <Typography variant="body2">Toppings</Typography>
 
         {configuredProduct.configuration.toppingIds.length === 0 ? (
-          <Typography color="text.secondary">None selected</Typography>
+          <Typography color="text.secondary">No topping selected</Typography>
         ) : (
           configuredProduct.configuration.toppingIds.map((id) => (
             <Typography key={id}>• {id}</Typography>
           ))
         )}
 
-        <Divider
-          sx={{
-            my: 4,
-          }}
-        />
+        <Divider sx={{ my: 4 }} />
 
         <Button fullWidth variant="contained" size="large">
           Add To Cart

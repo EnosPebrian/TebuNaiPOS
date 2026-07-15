@@ -1,5 +1,5 @@
-import { categories } from "./category";
-import { packages } from "./package";
+// import { categories } from "./category";
+// import { packages } from "./package";
 import { presets } from "./preset";
 import { products } from "./product";
 import { toppings } from "./topping";

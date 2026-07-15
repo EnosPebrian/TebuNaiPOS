@@ -1,10 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import Button from "@mui/material/Button";
 
 import ProductConfigurator from "../ProductConfigurator";
 import { Product } from "@/data/products";
+import { ConfiguredProduct } from "@/domain/product";
 
 interface Props {
   product: Product;
@@ -12,6 +13,25 @@ interface Props {
 
 export default function ChooseOptionsButton({ product }: Props) {
   const [open, setOpen] = useState(false);
+
+  /**
+   * Temporary bridge between the old
+   * product model and the new commerce engine.
+   *
+   * Later this will come from
+   * configuredProductFactory.createFromPreset().
+   */
+  const configuredProduct = useMemo<ConfiguredProduct>(
+    () => ({
+      productId: product.id,
+
+      configuration: {
+        packageId: undefined,
+        toppingIds: [],
+      },
+    }),
+    [product],
+  );
 
   return (
     <>
@@ -31,11 +51,11 @@ export default function ChooseOptionsButton({ product }: Props) {
         Order Now
       </Button>
 
-      {/* <ProductConfigurator
+      <ProductConfigurator
         open={open}
         onClose={() => setOpen(false)}
-        product={product}
-      /> */}
+        configuredProduct={configuredProduct}
+      />
     </>
   );
 }
