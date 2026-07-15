@@ -1,36 +1,48 @@
-Phase 1
-Marketing Website
-Hero
-Story
-Signature Collection
+# MVP
 
-✅ Almost finished.
+Feature Pack 001
 
-Phase 2
-Commerce
-Order
+Product Configurator
+
+- Package
+- Toppings
+- Live Price
+- Add To Cart
+
+---
+
+Feature Pack 002
+
+Cart
+
+- Quantity
+- Remove
+- Subtotal
+
+---
+
+Feature Pack 003
+
 Checkout
-WhatsApp
 
-🚧 Current sprint.
-
-Phase 3
-Build Your Own
-Ingredient picker
-Live pricing
-Recipe builder
-Phase 4
 Customer
-Saved orders
-Favorites
-Loyalty
-Phase 5
-Operations
-POS
-Kitchen Display
-Inventory
-Phase 6
-Analytics
-Sales
-Popular drinks
-Ingredient usage
+
+Delivery
+
+Pickup
+
+Notes
+
+---
+
+Feature Pack 004
+
+WhatsApp Checkout
+
+Generate WhatsApp message
+
+Launch WhatsApp
+
+---
+
+Deploy

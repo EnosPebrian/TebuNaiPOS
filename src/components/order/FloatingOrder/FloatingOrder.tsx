@@ -33,7 +33,7 @@ export default function FloatingOrder() {
 
             bottom: 24,
 
-            zIndex: 1400,
+            zIndex: 1100,
 
             cursor: "pointer",
 
@@ -60,7 +60,7 @@ export default function FloatingOrder() {
             },
           }}
         >
-          <Stack direction="row" spacing={2} alignItems="center">
+          <Stack direction="row" spacing={2} sx={{ alignItems: "center" }}>
             <ShoppingBagRoundedIcon />
 
             <Box>

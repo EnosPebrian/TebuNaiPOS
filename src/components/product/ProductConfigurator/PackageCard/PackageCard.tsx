@@ -35,11 +35,11 @@ export default function PackageCard({ item, selected, onClick }: Props) {
         }}
       >
         <Stack spacing={1}>
-          <Typography fontWeight={700}>🧴 {item.name}</Typography>
+          <Typography sx={{ fontWeight: 700 }}>🧴 {item.name}</Typography>
 
           <Typography color="text.secondary">{item.volume} ml</Typography>
 
-          <Typography color="primary" fontWeight={700}>
+          <Typography color="primary" sx={{ fontWeight: 700 }}>
             Rp {item.basePrice.toLocaleString("id-ID")}
           </Typography>
         </Stack>

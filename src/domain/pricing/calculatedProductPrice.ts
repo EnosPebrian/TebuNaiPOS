@@ -1,5 +1,4 @@
-import { Product } from "@/data/products";
-import { ProductPackage } from "@/data/packages";
+import { Product, ProductPackage } from "@/data/products";
 
 export function calculateProductPrice(
   product: Product,

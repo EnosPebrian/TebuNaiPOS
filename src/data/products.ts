@@ -32,6 +32,15 @@ export interface ProductPackage {
   featured?: boolean;
 }
 
+export interface ProductVariant {
+  id: string;
+  label: string;
+  volume: number;
+  package: "bottle" | "cup";
+  price: number;
+  featured?: boolean;
+}
+
 const bottlePackages: ProductPackage[] = [
   {
     id: "personal",

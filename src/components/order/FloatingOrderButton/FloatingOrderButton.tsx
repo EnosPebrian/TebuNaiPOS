@@ -37,7 +37,7 @@ export default function FloatingOrderButton() {
           ml: 2,
         }}
       >
-        <Typography fontWeight={700}>Your Order</Typography>
+        <Typography sx={{ fontWeight: 700 }}>Your Order</Typography>
 
         <Typography variant="caption">
           {itemCount} Drink{itemCount > 1 ? "s" : ""}

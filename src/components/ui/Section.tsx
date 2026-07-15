@@ -4,12 +4,14 @@ import { SxProps, Theme } from "@mui/material";
 interface SectionProps {
   children: React.ReactNode;
   sx?: SxProps<Theme>;
+  id?: string;
 }
 
-export default function Section({ children, sx }: SectionProps) {
+export default function Section({ children, sx, id }: SectionProps) {
   return (
     <Box
       component="section"
+      id={id}
       sx={{
         py: {
           xs: 12,

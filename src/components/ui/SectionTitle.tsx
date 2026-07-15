@@ -8,9 +8,9 @@ interface Props {
 
 export default function SectionTitle({ eyebrow, title, subtitle }: Props) {
   return (
-    <Stack spacing={2} mb={6}>
+    <Stack spacing={2} sx={{ mb: 6 }}>
       {eyebrow && (
-        <Typography color="primary" fontWeight={700} letterSpacing={2}>
+        <Typography color="primary" sx={{ fontWeight: 700, letterSpacing: 2 }}>
           {eyebrow.toUpperCase()}
         </Typography>
       )}

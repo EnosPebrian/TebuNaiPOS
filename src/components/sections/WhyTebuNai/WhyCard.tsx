@@ -29,9 +29,9 @@ export default function WhyCard({ icon, title, description }: WhyCardProps) {
       }}
     >
       <Stack spacing={3}>
-        <Typography fontSize="2.8rem">{icon}</Typography>
+        <Typography sx={{ fontSize: "2.8rem" }}>{icon}</Typography>
 
-        <Typography variant="h5" fontWeight={700}>
+        <Typography variant="h5" sx={{ fontWeight: 700 }}>
           {title}
         </Typography>
 

@@ -12,7 +12,7 @@ export const siteConfig = {
 
   orderButton: "Order Online",
 
-  whatsapp: "",
+  whatsapp: "6281322257094",
 
   instagram: "",
 
