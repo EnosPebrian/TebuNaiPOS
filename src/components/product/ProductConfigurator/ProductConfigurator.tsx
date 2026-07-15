@@ -10,6 +10,7 @@ import { ConfiguredProduct } from "@/domain/product";
 import { catalog } from "@/domain/catalog";
 import PackageSelector from "./PackageSelector";
 import ToppingSelector from "./ToppingSelector";
+import PackageSelector from "./PackageSelector";
 
 interface ProductConfiguratorProps {
   open: boolean;

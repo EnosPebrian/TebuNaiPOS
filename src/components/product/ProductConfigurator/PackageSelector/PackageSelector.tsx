@@ -1,9 +1,10 @@
 "use client";
 
 import Stack from "@mui/material/Stack";
-import Button from "@mui/material/Button";
 
 import { catalog } from "@/domain/catalog";
+
+import PackageCard from "../PackageCard";
 
 interface Props {
   value?: string;
@@ -17,14 +18,12 @@ export default function PackageSelector({ value, onChange }: Props) {
   return (
     <Stack spacing={2}>
       {packages.map((pkg) => (
-        <Button
+        <PackageCard
           key={pkg.id}
-          fullWidth
-          variant={value === pkg.id ? "contained" : "outlined"}
+          item={pkg}
+          selected={value === pkg.id}
           onClick={() => onChange(pkg.id)}
-        >
-          {pkg.name}
-        </Button>
+        />
       ))}
     </Stack>
   );
