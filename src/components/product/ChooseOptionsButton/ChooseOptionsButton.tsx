@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Button from "@mui/material/Button";
 
-import ProductDrawer from "../ProductDrawer";
+import ProductConfigurator from "../ProductConfigurator";
 import { Product } from "@/data/products";
 
 interface Props {
@@ -31,11 +31,11 @@ export default function ChooseOptionsButton({ product }: Props) {
         Order Now
       </Button>
 
-      <ProductDrawer
+      {/* <ProductConfigurator
         open={open}
         onClose={() => setOpen(false)}
         product={product}
-      />
+      /> */}
     </>
   );
 }
