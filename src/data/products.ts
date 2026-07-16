@@ -37,7 +37,6 @@ export interface ProductVariant {
   label: string;
   volume: number;
   package: "bottle" | "cup";
-  price: number;
   featured?: boolean;
 }
 
@@ -99,14 +98,12 @@ const classicVariants: ProductVariant[] = [
     label: "250 ml",
     volume: 250,
     package: "bottle",
-    price: 15000,
   },
   {
     id: "500",
     label: "500 ml",
     volume: 500,
     package: "bottle",
-    price: 20000,
     featured: true,
   },
   {
@@ -114,7 +111,6 @@ const classicVariants: ProductVariant[] = [
     label: "1500 ml",
     volume: 1500,
     package: "bottle",
-    price: 50000,
   },
 ];
 
@@ -124,14 +120,12 @@ const fruitVariants: ProductVariant[] = [
     label: "250 ml",
     volume: 250,
     package: "bottle",
-    price: 17000,
   },
   {
     id: "500",
     label: "500 ml",
     volume: 500,
     package: "bottle",
-    price: 22000,
     featured: true,
   },
   {
@@ -139,7 +133,6 @@ const fruitVariants: ProductVariant[] = [
     label: "1500 ml",
     volume: 1500,
     package: "bottle",
-    price: 55000,
   },
 ];
 
@@ -149,14 +142,12 @@ const premiumVariants: ProductVariant[] = [
     label: "250 ml",
     volume: 250,
     package: "bottle",
-    price: 18000,
   },
   {
     id: "500",
     label: "500 ml",
     volume: 500,
     package: "bottle",
-    price: 24000,
     featured: true,
   },
   {
@@ -164,7 +155,6 @@ const premiumVariants: ProductVariant[] = [
     label: "1500 ml",
     volume: 1500,
     package: "bottle",
-    price: 60000,
   },
 ];
 

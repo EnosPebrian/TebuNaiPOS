@@ -9,45 +9,25 @@ export const categories: Category[] = [
     sortOrder: 1,
   },
 
-  // Reserved for future expansion
-
-  {
-    id: "snack",
-    slug: "snack",
-    name: "Snacks",
-    enabled: true,
-    sortOrder: 2,
-  },
-
   {
     id: "main-course",
     slug: "main-course",
     name: "Main Course",
     enabled: true,
+    sortOrder: 2,
+  },
+  {
+    id: "snacks",
+    slug: "snacks",
+    name: "Snacks",
+    enabled: true,
     sortOrder: 3,
   },
-
   {
-    id: "dessert",
-    slug: "dessert",
-    name: "Dessert",
+    id: "alcoholic-beverage",
+    slug: "alcoholic-beverage",
+    name: "Alcoholic Beverage",
     enabled: true,
     sortOrder: 4,
-  },
-
-  {
-    id: "coffee",
-    slug: "coffee",
-    name: "Coffee",
-    enabled: true,
-    sortOrder: 5,
-  },
-
-  {
-    id: "tea",
-    slug: "tea",
-    name: "Tea",
-    enabled: true,
-    sortOrder: 6,
   },
 ];

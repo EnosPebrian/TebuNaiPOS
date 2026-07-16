@@ -17,11 +17,12 @@ import {
 } from "@mui/material";
 
 import MenuIcon from "@mui/icons-material/Menu";
+import { WHATSAPP_NUMBER } from "@/config/whatsapp";
 
 const navItems = [
   {
     label: "Menu",
-    href: "#products",
+    href: "#menu",
   },
   {
     label: "Story",
@@ -113,14 +114,14 @@ export default function Navbar() {
               variant="contained"
               color="primary"
               component="a"
-              href="https://wa.me/6281322257094"
+              href={`https://wa.me/${WHATSAPP_NUMBER}`}
               target="_blank"
               sx={{
                 borderRadius: 999,
                 px: 3,
               }}
             >
-              Order Now
+              Open WhatsApp
             </Button>
           </Box>
 
@@ -152,8 +153,8 @@ export default function Navbar() {
             ))}
 
             <Box sx={{ p: 2 }}>
-              <Button fullWidth variant="contained">
-                Order Now
+              <Button fullWidth variant="contained" component="a" href={`https://wa.me/${WHATSAPP_NUMBER}`} target="_blank" rel="noreferrer">
+                Open WhatsApp
               </Button>
             </Box>
           </List>

@@ -39,6 +39,8 @@ export function calculatePrice(request: PricingRequest): PricingResult {
 
     if (!topping) continue;
 
+    const toppingPrice = pkg.volume === 1500 ? 5000 : 3000;
+
     lines.push({
       id: topping.id,
 
@@ -48,9 +50,9 @@ export function calculatePrice(request: PricingRequest): PricingResult {
 
       quantity: 1,
 
-      unitPrice: topping.extraPrice,
+      unitPrice: toppingPrice,
 
-      total: topping.extraPrice,
+      total: toppingPrice,
     });
   }
 

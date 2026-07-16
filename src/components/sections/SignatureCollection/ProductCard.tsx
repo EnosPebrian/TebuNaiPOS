@@ -1,4 +1,5 @@
 "use client";
+import { useState } from "react";
 import Image from "next/image";
 
 import {
@@ -13,6 +14,8 @@ import {
 } from "@mui/material";
 import { Product } from "@/data/products";
 import ChooseOptionsButton from "@/components/product/ChooseOptionsButton";
+import { formatMoney } from "@/domain/money";
+import { calculatePrice } from "@/domain/pricing";
 
 interface ProductCardProps {
   product: Product;
@@ -21,6 +24,16 @@ interface ProductCardProps {
 export default function ProductCard({ product }: ProductCardProps) {
   const featuredSize =
     product.variants.find((size) => size.featured) ?? product.variants[0];
+  const [selectedSizeId, setSelectedSizeId] = useState(featuredSize.id);
+  const selectedSize =
+    product.variants.find((size) => size.id === selectedSizeId) ?? featuredSize;
+  const selectedPrice = calculatePrice({
+    packageId: `${selectedSize.id}ml`,
+    toppingIds: product.craftedFrom.filter(
+      (ingredientId) => ingredientId !== "sugarcane",
+    ),
+    quantity: 1,
+  });
   const categoryLabel = {
     classic: "Classic Collection",
     fruit: "Fruit Collection",
@@ -158,7 +171,7 @@ export default function ProductCard({ product }: ProductCardProps) {
                 letterSpacing: 1.2,
               }}
             >
-              Mulai dari
+              Harga
             </Typography>
 
             <Typography
@@ -169,7 +182,7 @@ export default function ProductCard({ product }: ProductCardProps) {
                 lineHeight: 1,
               }}
             >
-              Rp {featuredSize.price.toLocaleString("id-ID")}
+              {formatMoney(selectedPrice.grandTotal)}
             </Typography>
           </Box>
           <Divider />
@@ -184,8 +197,10 @@ export default function ProductCard({ product }: ProductCardProps) {
               <Chip
                 key={size.id}
                 label={size.label}
-                color={size.featured ? "primary" : "default"}
-                variant={size.featured ? "filled" : "outlined"}
+                clickable
+                onClick={() => setSelectedSizeId(size.id)}
+                color={size.id === selectedSize.id ? "primary" : "default"}
+                variant={size.id === selectedSize.id ? "filled" : "outlined"}
                 sx={{
                   flex: 1,
                   height: 38,
@@ -201,7 +216,7 @@ export default function ProductCard({ product }: ProductCardProps) {
             ))}
           </Stack>
           <Divider />
-          <ChooseOptionsButton product={product} />
+          <ChooseOptionsButton product={product} packageId={`${selectedSize.id}ml`} />
         </Stack>
       </CardContent>
     </Card>

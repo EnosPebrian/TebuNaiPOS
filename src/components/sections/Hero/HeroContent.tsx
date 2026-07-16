@@ -1,8 +1,11 @@
+"use client";
+
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 
 import PrimaryButton from "@/components/ui/PrimaryButton";
 import SecondaryButton from "@/components/ui/SecondaryButton";
+import { WHATSAPP_NUMBER } from "@/config/whatsapp";
 
 export default function HeroContent() {
   return (
@@ -73,9 +76,11 @@ export default function HeroContent() {
           mt: 6,
         }}
       >
-        <PrimaryButton>Order Online</PrimaryButton>
+        <PrimaryButton onClick={() => window.open(`https://wa.me/${WHATSAPP_NUMBER}`, "_blank", "noopener,noreferrer")}>
+          Open WhatsApp
+        </PrimaryButton>
 
-        <SecondaryButton>Explore Menu</SecondaryButton>
+        <SecondaryButton component="a" href="#menu">Explore Menu</SecondaryButton>
       </Stack>
 
       {/* Badges */}

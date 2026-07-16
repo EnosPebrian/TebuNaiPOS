@@ -8,12 +8,12 @@ import { ConfiguredProduct } from "@/domain/products";
 
 interface Props {
   product: Product;
+  packageId: string;
 }
 
-export default function ChooseOptionsButton({ product }: Props) {
+export default function ChooseOptionsButton({ product, packageId }: Props) {
   const [open, setOpen] = useState(false);
   const configuredProduct = useMemo<ConfiguredProduct>(() => {
-    const packageId = `${product.variants.find((variant) => variant.featured)?.id ?? product.variants[0].id}ml`;
     const toppingIds = product.craftedFrom.filter(
       (ingredientId) => ingredientId !== "sugarcane",
     );
@@ -22,7 +22,7 @@ export default function ChooseOptionsButton({ product }: Props) {
       productId: "sugar-cane-juice",
       configuration: { packageId, toppingIds },
     };
-  }, [product]);
+  }, [packageId, product]);
 
   return (
     <>
