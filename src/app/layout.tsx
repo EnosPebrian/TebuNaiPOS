@@ -3,6 +3,7 @@ import { AppRouterCacheProvider } from "@mui/material-nextjs/v16-appRouter";
 import AppProvider from "@/components/providers/AppProvider";
 import { Inter, Poppins } from "next/font/google";
 import { OrderProvider } from "@/domain/order";
+import { Analytics } from "@vercel/analytics/next";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -33,6 +34,7 @@ export default function RootLayout({
             <OrderProvider>{children}</OrderProvider>
           </AppProvider>
         </AppRouterCacheProvider>
+        <Analytics />
       </body>
     </html>
   );
