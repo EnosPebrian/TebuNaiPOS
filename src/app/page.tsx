@@ -4,6 +4,7 @@ import WhyTebuNai from "@/components/sections/WhyTebuNai";
 import FeaturedMenu from "@/components/sections/FeaturedMenu";
 import OurStory from "@/components/sections/OurStory";
 import FloatingOrder from "@/components/order/FloatingOrder";
+import { Analytics } from "@vercel/analytics/next";
 
 export default function Home() {
   return (
@@ -16,6 +17,7 @@ export default function Home() {
         <OurStory />
         <FeaturedMenu />
         <FloatingOrder />
+        <Analytics />
       </main>
     </>
   );
