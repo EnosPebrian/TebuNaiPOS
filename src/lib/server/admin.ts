@@ -1,6 +1,7 @@
 import "server-only";
 import { createHash, scryptSync, timingSafeEqual } from "node:crypto";
 import { cookies } from "next/headers";
+import { connection } from "next/server";
 import { getIronSession } from "iron-session";
 import { appOrigin, HttpError } from "./http";
 
@@ -23,6 +24,8 @@ export async function adminSession() {
   return getIronSession<AdminSession>(await cookies(), { cookieName: "tebunai-admin", password: process.env.ADMIN_SESSION_SECRET!, ttl: 8 * 60 * 60, cookieOptions: { httpOnly: true, sameSite: "strict", secure: appOrigin()!.protocol === "https:", path: "/" } });
 }
 export async function currentAdmin(): Promise<string | null> {
+  // Hosting credentials may be supplied after the build; never freeze this check.
+  await connection();
   if (!adminConfigured()) return null;
   const session = await adminSession();
   return session.username === process.env.ADMIN_USERNAME && session.credentialVersion === version() ? session.username ?? null : null;
