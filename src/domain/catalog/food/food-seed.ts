@@ -53,7 +53,9 @@ export const foods: Food[] = [
     categoryId: "alcoholic-beverage",
     price: 50000,
     image: "/images/hero-bottle-v2.png",
-    enabled: true,
+    // Ordering stays disabled pending licensing, sales rules, age verification,
+    // and explicit merchant authorization. Domain validation also rejects it.
+    enabled: false,
     sortOrder: 1,
     volume: 250,
   },

@@ -9,7 +9,6 @@ import {
   Typography,
   Chip,
   Stack,
-  Button,
   Divider,
 } from "@mui/material";
 import { Product } from "@/data/products";
@@ -41,6 +40,7 @@ export default function ProductCard({ product }: ProductCardProps) {
   };
   return (
     <Card
+      component="article"
       elevation={0}
       sx={{
         height: "100%",
@@ -114,7 +114,7 @@ export default function ProductCard({ product }: ProductCardProps) {
 
       <CardContent
         sx={{
-          px: 4,
+          px: { xs: 2.5, md: 3 },
           pb: 4,
           pt: 2,
         }}
@@ -134,10 +134,12 @@ export default function ProductCard({ product }: ProductCardProps) {
           />
 
           <Typography
+            component="h3"
             variant="h5"
             sx={{
               fontWeight: 800,
-              fontSize: 40,
+              fontSize: { xs: 32, md: 34 },
+              overflowWrap: "anywhere",
               lineHeight: 1,
               letterSpacing: "-0.04em",
             }}
@@ -176,7 +178,7 @@ export default function ProductCard({ product }: ProductCardProps) {
 
             <Typography
               sx={{
-                fontSize: 36,
+                fontSize: 32,
                 fontWeight: 700,
                 color: "primary.main",
                 lineHeight: 1,
@@ -187,6 +189,8 @@ export default function ProductCard({ product }: ProductCardProps) {
           </Box>
           <Divider />
           <Stack
+            role="group"
+            aria-label={`Bottle size for ${product.name}`}
             direction="row"
             spacing={1}
             sx={{
@@ -198,6 +202,7 @@ export default function ProductCard({ product }: ProductCardProps) {
                 key={size.id}
                 label={size.label}
                 clickable
+                aria-pressed={size.id === selectedSize.id}
                 onClick={() => setSelectedSizeId(size.id)}
                 color={size.id === selectedSize.id ? "primary" : "default"}
                 variant={size.id === selectedSize.id ? "filled" : "outlined"}

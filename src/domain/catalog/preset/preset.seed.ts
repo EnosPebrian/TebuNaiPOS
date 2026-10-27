@@ -10,7 +10,7 @@ export const presets: Preset[] = [
 
     description: "Pure fresh sugar cane juice.",
 
-    image: "/products/original.png",
+    image: "/images/products/original.png",
 
     accentColor: "#6BAA75",
 
@@ -34,7 +34,7 @@ export const presets: Preset[] = [
 
     description: "Fresh coconut with lime.",
 
-    image: "/products/coconut-lime.png",
+    image: "/images/products/coconut.png",
 
     accentColor: "#88C999",
 
@@ -58,7 +58,7 @@ export const presets: Preset[] = [
 
     description: "Fresh tomato and carrot blend.",
 
-    image: "/products/tomato-carrot.png",
+    image: "/images/products/tomato.png",
 
     accentColor: "#F28C52",
 
@@ -82,7 +82,7 @@ export const presets: Preset[] = [
 
     description: "Refreshing pineapple and lemon.",
 
-    image: "/products/lemon-pineapple.png",
+    image: "/images/products/pineapple.png",
 
     accentColor: "#F4D35E",
 
@@ -106,7 +106,7 @@ export const presets: Preset[] = [
 
     description: "Warm ginger with fresh lemon.",
 
-    image: "/products/ginger-lemon.png",
+    image: "/images/products/ginger.png",
 
     accentColor: "#F7B267",
 

@@ -11,7 +11,7 @@ export const products: Product[] = [
     description:
       "Freshly pressed sugar cane juice with your favorite fruit and herbal toppings.",
 
-    image: "/products/original.png",
+    image: "/images/products/original.png",
 
     categoryId: "sugarcane-juice",
 
@@ -33,12 +33,11 @@ export const products: Product[] = [
     ],
 
     presetIds: [
-      "tebu-nipis",
-      "tebu-beet",
-      "tebu-santan",
-      "tebu-beet-lemon",
-      "tebu-ginger-turmeric",
-      "tebu-nanas-kunyit",
+      "original",
+      "santan-nipis",
+      "tomat-wortel",
+      "lemon-nanas",
+      "jahe-lemon",
     ],
 
     enabled: true,

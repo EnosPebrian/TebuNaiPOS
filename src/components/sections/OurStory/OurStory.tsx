@@ -31,6 +31,7 @@ export default function OurStory() {
             fontWeight: 800,
             lineHeight: 1,
             letterSpacing: "-0.04em",
+            fontSize: { xs: "2.1rem", md: "2.8rem" },
           }}
         >
           Nature already
@@ -71,7 +72,7 @@ export default function OurStory() {
                   letterSpacing: "-0.03em",
                 }}
               >
-                “What kind of business can genuinely bring value to people's
+                “What kind of business can genuinely bring value to people&apos;s
                 lives?”
               </Typography>
 
@@ -81,7 +82,7 @@ export default function OurStory() {
                   lineHeight: 1.9,
                 }}
               >
-                We didn't want to build just another drink brand. We wanted to
+                We didn&apos;t want to build just another drink brand. We wanted to
                 create something that genuinely serves people.
               </Typography>
 
@@ -147,6 +148,7 @@ export default function OurStory() {
                 src="/images/hero-bottle-v2.png"
                 alt="Fresh sugarcane juice"
                 fill
+                sizes="(max-width: 899px) 100vw, 50vw"
                 style={{
                   objectFit: "contain",
                 }}

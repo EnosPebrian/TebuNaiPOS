@@ -18,10 +18,10 @@ export interface ProductConfiguration {
   /**
    * Selected package.
    */
-  packageId?: string;
+  readonly packageId?: string;
 
   /**
    * Selected toppings.
    */
-  toppingIds: string[];
+  readonly toppingIds: readonly string[];
 }

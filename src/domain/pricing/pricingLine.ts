@@ -1,6 +1,6 @@
 import { Money } from "@/domain/money";
 
-export type PricingLineType = "package" | "topping" | "discount" | "charge";
+export type PricingLineType = "product" | "package" | "topping" | "discount" | "charge";
 
 export interface PricingLine {
   /**

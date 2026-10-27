@@ -11,3 +11,38 @@ body {
 * {
   box-sizing: border-box;
 }
+
+section[id] {
+  scroll-margin-top: 100px;
+}
+
+:focus-visible {
+  outline: 3px solid #2f6f4f;
+  outline-offset: 4px;
+}
+
+.skip-link {
+  position: fixed;
+  top: 8px;
+  left: 8px;
+  z-index: 2000;
+  transform: translateY(-200%);
+  padding: 12px 20px;
+  border-radius: 8px;
+  background: #fff;
+  color: #205137;
+  font-weight: 700;
+}
+
+.skip-link:focus {
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
