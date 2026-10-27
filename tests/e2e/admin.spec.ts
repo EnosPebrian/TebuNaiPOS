@@ -67,6 +67,7 @@ test("staff can sign in, fulfill a saved order, record payment and sign out", as
   await page.getByLabel("Password", { exact: false }).fill(process.env.E2E_ADMIN_PASSWORD!);
   await page.getByRole("button", { name: "Sign in", exact: true }).click();
   await expect(page).toHaveURL(/\/admin$/);
+  await expect(page).toHaveTitle(/Order administration/);
   const card = page.getByRole("article").filter({ has: page.getByRole("heading", { name, exact: true }) });
   await expect(card).toBeVisible();
   await page.screenshot({ path: testInfo.outputPath("admin-dashboard.png"), fullPage: true });
