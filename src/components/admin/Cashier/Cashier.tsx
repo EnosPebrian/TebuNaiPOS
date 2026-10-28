@@ -1,6 +1,5 @@
 "use client";
 import { useRef, useState, useSyncExternalStore } from "react";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Alert, Box, Button, Checkbox, Container, Divider, FormControlLabel, Stack, TextField, Typography } from "@mui/material";
 import { catalog } from "@/domain/catalog";
@@ -10,6 +9,7 @@ import type { Order } from "@/domain/order/Order";
 import { formatMoney } from "@/domain/money";
 import ProductConfigurator from "@/components/product/ProductConfigurator";
 import QuantityStepper from "@/components/common/QuantityStepper";
+import StaffNavigation from "@/components/admin/StaffNavigation";
 
 const transactionKey = "tebunai-counter-request-v1";
 type Product = ReturnType<typeof catalog.getProducts>[number];
@@ -83,9 +83,7 @@ export default function Cashier({ username }: { username: string }) {
   return <Container maxWidth="lg" sx={{ py: { xs: 3, md: 6 }, overflowWrap: "anywhere", "& .MuiInputLabel-root": { color: "text.primary" } }}>
     <Typography variant="overline" color="primary">TEBU NAI · {username}</Typography>
     <Typography component="h1" variant="h3" sx={{ fontSize: { xs: "2.2rem", md: "3rem" }, mb: 2 }}>Cashier</Typography>
-    <Stack component="nav" aria-label="Staff navigation" direction="row" spacing={1} useFlexGap sx={{ flexWrap: "wrap", mb: 3 }}>
-      <Button component={Link} href="/admin">All orders</Button><Button component={Link} href="/admin/kitchen">Kitchen queue</Button><Button component={Link} href="/admin/pos" variant="contained">Cashier</Button>
-    </Stack>
+    <StaffNavigation active="pos" />
     {(error || storageError) && <Alert severity="error" sx={{ mb: 2 }}>{error || storageError}</Alert>}
     {saved ? <Stack spacing={2}>
       <Alert severity="success">Sale saved. Follow fulfillment in All orders or Kitchen queue.</Alert>

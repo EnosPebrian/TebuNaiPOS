@@ -90,6 +90,12 @@ Validation runs zero-warning ESLint, strict TypeScript, unit tests and a product
 The CI workflow validates and runs browser tests without publishing. For deployment, configure Node.js 24, a private authenticated MongoDB connection, exact HTTPS APP_ORIGIN, fresh admin credentials and the real public merchant/site variables. Run validation and inspect the store/admin flows before owner-authorized deployment. Build-time Google-font access is needed by the existing Next.js font setup. No deployment or payment processing is performed by these scripts.
 
 References: [Next.js authentication](https://nextjs.org/docs/app/guides/authentication), [MongoDB compound operations](https://www.mongodb.com/docs/drivers/node/current/crud/compound-operations/), [iron-session](https://github.com/vvo/iron-session), [local MongoDB runner](https://typegoose.github.io/mongodb-memory-server/docs/guides/quick-start-guide/).
+## Sales reports
+
+Staff can open `/admin/reports` for a WIB date range of up to 31 days. Order counts and completed values use orders created in the period; recorded payments use the first paid history event, including older orders paid during the period. Paid cancellations are shown separately and remain included in recorded receipts. These are operational figures, not net revenue; refunds and costs are not tracked. Historical status figures may change as orders are fulfilled or cancelled.
+
+The protected CSV export includes references, lifecycle, amounts and explicit WIB-period flags/UTC timestamps, with no customer contact details. The page displays up to 20 references; CSV includes all matches. Reports exceeding 5,000 candidate orders require a shorter date range. See [Sales reports](src/docs/FEATURE_PACKS/010%20Sales%20Reports.md).
+
 ## Cashier
 
 Staff can open `/admin/pos` to search products, reuse juice configuration, and save pickup counter sales. The basket is stored separately from the customer cart. A phone is optional for a walk-in customer; online checkout still requires one. Counter sales are confirmed into the kitchen queue. Payment remains unpaid unless staff explicitly check that it has been received. Prices and availability are validated again by the server; rum remains unavailable.
