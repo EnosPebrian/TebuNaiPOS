@@ -109,3 +109,9 @@ Staff can open `/admin/kitchen` for confirmed, preparing and ready orders sorted
 Each saved order has a protected Print order slip link. The print page includes the saved configuration, amounts, delivery quote and actual recorded payment/status, and hides its controls on paper. Unpaid requests remain clearly marked unpaid. No payment is collected by printing a slip.
 
 The existing GitHub remote is EnosPebrian/TebuNaiPOS and the Vercel project is tebu-nai-pos. Deployments require the real production MongoDB connection, exact HTTPS APP_ORIGIN, fresh admin settings and the confirmed public merchant settings in Vercel; local `.env.local` and database files must never be published. Node.js is pinned to the 24.x release line. The Next.js and lint packages are aligned on 16.4.3 with compatible security fixes reflected in the lockfile.
+
+## Order search and automatic refresh
+
+All orders and Kitchen queue support reference-prefix search (at least 8 characters), payment/source/fulfillment/status filters and optional paired WIB creation dates (up to 31 days). Apply filters starts at page one; Clear filters restores the view. Updates reload matching rows and counts, and the server corrects a page that no longer exists. Cards show payment and source. Filters reset on a full reload.
+
+Kitchen refresh defaults on every 30 seconds; All orders can opt in. Background refresh pauses while the tab is hidden, an order drawer is open or filters are being edited. Failures retain the prior data and show an error. The last-updated time changes only after a successful read. Existing version checks still protect staff changes. See [Order operations](src/docs/FEATURE_PACKS/011%20Order%20Operations.md).

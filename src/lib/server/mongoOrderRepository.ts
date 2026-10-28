@@ -6,6 +6,8 @@ import type { OrderRepository } from "@/domain/order/order.repository";
 import { database } from "./database";
 import { HttpError } from "./http";
 import { summarizeOrders, type ReportRecord } from "@/domain/order/report";
+import { reportRange } from "@/domain/order/report";
+import type { Filter } from "mongodb";
 
 interface OrderDocument extends ManagedOrder { _id: string; requestKey: string; fingerprint: string }
 const publicRecord = (doc: OrderDocument): ManagedOrder => ({ order: doc.order, version: doc.version, updatedAt: doc.updatedAt, history: doc.history });
@@ -30,12 +32,19 @@ export const orderRepository: OrderRepository = {
     if (docs.length > 5000) throw new HttpError(413, "This report exceeds 5,000 orders. Choose a shorter date range.");
     return summarizeOrders(docs.map((doc) => ({ ...doc.order, history: doc.history }) as ReportRecord), range);
   },
-  async list(page, status, view = "orders") {
-    const query = status ? { "order.status": status } : view === "kitchen" ? { "order.status": { $in: [...kitchenStatuses] } } : {};
+  async list(page, status, view = "orders", filters = {}) {
+    const query: Filter<OrderDocument> = status ? { "order.status": status } : view === "kitchen" ? { "order.status": { $in: [...kitchenStatuses] } } : {};
+    if (filters.reference) query._id = filters.reference.length === 36 ? filters.reference : { $regex: `^${filters.reference}` };
+    if (filters.payment) query["order.paymentStatus"] = filters.payment;
+    if (filters.source) query["order.source"] = filters.source === "counter" ? "counter" : { $ne: "counter" };
+    if (filters.method) query["order.fulfillment.method"] = filters.method;
+    if (filters.from && filters.to) { const range = reportRange(filters.from, filters.to); query["order.createdAt"] = { $gte: range.start, $lt: range.end }; }
     const records = await collection();
     const direction = view === "kitchen" ? 1 : -1;
-    const [docs, total] = await Promise.all([records.find(query).sort({ "order.createdAt": direction, _id: direction }).skip((page - 1) * 20).limit(20).toArray(), records.countDocuments(query)]);
-    return { orders: docs.map(publicRecord), total };
+    const total = await records.countDocuments(query, { maxTimeMS: 5000 });
+    const currentPage = Math.min(page, Math.max(1, Math.ceil(total / 20)));
+    const docs = await records.find(query, { maxTimeMS: 5000 }).sort({ "order.createdAt": direction, _id: direction }).skip((currentPage - 1) * 20).limit(20).toArray();
+    return { orders: docs.map(publicRecord), total, page: currentPage };
   },
   async update(id, version, order: Order, event: OrderEvent) {
     const result = await (await collection()).findOneAndUpdate({ _id: id, version }, { $set: { order, updatedAt: event.at }, $inc: { version: 1 }, $push: { history: event } }, { returnDocument: "after" });
