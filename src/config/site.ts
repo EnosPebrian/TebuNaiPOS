@@ -1,3 +1,5 @@
+import { WHATSAPP_NUMBER } from "./whatsapp";
+
 export const siteConfig = {
   name: "Tebu Nai",
 
@@ -12,7 +14,7 @@ export const siteConfig = {
 
   orderButton: "Order Online",
 
-  whatsapp: "6289661315908",
+  whatsapp: WHATSAPP_NUMBER,
 
   instagram: "",
 

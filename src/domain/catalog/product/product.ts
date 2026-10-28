@@ -54,4 +54,9 @@ export interface Product {
    * Can customers order this?
    */
   enabled: boolean;
+
+  /** Fixed-price products have no package or topping selections. */
+  price?: number;
+
+  volume?: number;
 }

@@ -40,58 +40,6 @@ export interface ProductVariant {
   featured?: boolean;
 }
 
-const bottlePackages: ProductPackage[] = [
-  {
-    id: "personal",
-
-    name: "Personal Bottle",
-
-    label: "250 ml",
-
-    volume: 250,
-
-    container: "bottle",
-
-    basePrice: 13000,
-
-    flavorPrice: 2000,
-  },
-
-  {
-    id: "everyday",
-
-    name: "Everyday Bottle",
-
-    label: "500 ml",
-
-    volume: 500,
-
-    container: "bottle",
-
-    basePrice: 17000,
-
-    flavorPrice: 3000,
-
-    featured: true,
-  },
-
-  {
-    id: "family",
-
-    name: "Family Bottle",
-
-    label: "1.5 L",
-
-    volume: 1500,
-
-    container: "bottle",
-
-    basePrice: 35000,
-
-    flavorPrice: 5000,
-  },
-];
-
 const classicVariants: ProductVariant[] = [
   {
     id: "250",

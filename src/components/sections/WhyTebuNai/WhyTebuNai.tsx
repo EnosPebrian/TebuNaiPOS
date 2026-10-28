@@ -1,6 +1,5 @@
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
-import Paper from "@mui/material/Paper";
 import Box from "@mui/material/Box";
 import SpaOutlinedIcon from "@mui/icons-material/SpaOutlined";
 import LocalShippingOutlinedIcon from "@mui/icons-material/LocalShippingOutlined";
@@ -56,6 +55,7 @@ export default function WhyTebuNai() {
             mb: 8,
             fontWeight: 800,
             maxWidth: 520,
+            fontSize: { xs: "2.1rem", md: "2.8rem" },
           }}
         >
           Freshly Pressed.
@@ -116,6 +116,7 @@ export default function WhyTebuNai() {
 
                   <Box>
                     <Typography
+                      component="h3"
                       variant="h6"
                       sx={{
                         fontWeight: 700,

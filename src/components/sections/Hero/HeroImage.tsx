@@ -8,6 +8,7 @@ export default function HeroImage() {
         position: "relative",
 
         width: "100%",
+        overflow: "hidden",
 
         height: {
           xs: 420,
@@ -76,8 +77,8 @@ export default function HeroImage() {
           position: "relative",
 
           width: {
-            xs: 300,
-            md: 540,
+            xs: "min(300px, 100%)",
+            md: "min(540px, 100%)",
           },
 
           height: {

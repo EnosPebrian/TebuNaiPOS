@@ -7,10 +7,10 @@ export interface ConfiguredProduct {
   /**
    * Product from catalog.
    */
-  productId: string;
+  readonly productId: string;
 
   /**
    * Customer selections.
    */
-  configuration: ProductConfiguration;
+  readonly configuration: ProductConfiguration;
 }
