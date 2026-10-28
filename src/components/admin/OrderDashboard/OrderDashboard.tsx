@@ -1,9 +1,9 @@
 "use client";
 import { useState } from "react";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Alert, Box, Button, Chip, Container, Divider, Drawer, FormControl, IconButton, InputLabel, MenuItem, Select, Stack, TextField, Typography } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
+import StaffNavigation from "@/components/admin/StaffNavigation";
 import { formatMoney } from "@/domain/money";
 import { type ManagedOrder, type OrderStatus, type OrderUpdate, kitchenStatuses, nextStatuses, orderStatuses, statusLabels } from "@/domain/order/lifecycle";
 
@@ -59,7 +59,7 @@ export default function OrderDashboard({ username, initialData, initialError, vi
       <Box><Typography variant="overline" color="primary">TEBU NAI · {username}</Typography><Typography component="h1" variant="h3" sx={{ fontSize: { xs: "2.2rem", md: "3rem" } }}>{view === "kitchen" ? "Kitchen queue" : "Orders"}</Typography></Box>
       <Stack direction="row" spacing={1}><Button onClick={() => { setBusy(true); setError(""); void load(); }} disabled={busy}>Refresh</Button><Button onClick={logout} disabled={busy}>Sign out</Button></Stack>
     </Stack>
-    <Stack component="nav" aria-label="Staff navigation" direction="row" spacing={1} useFlexGap sx={{ mb: 3, flexWrap: "wrap" }}><Button component={Link} href="/admin" variant={view === "orders" ? "contained" : "outlined"}>All orders</Button><Button component={Link} href="/admin/kitchen" variant={view === "kitchen" ? "contained" : "outlined"}>Kitchen queue</Button><Button component={Link} href="/admin/pos" variant="outlined">Cashier</Button></Stack>
+    <StaffNavigation active={view} />
     {view === "kitchen" && <Typography sx={{ mb: 3 }} color="text.primary">Confirmed, preparing and ready orders · oldest first. Refresh to see new work.</Typography>}
     {error && !selected && <Alert severity="error" sx={{ mb: 3 }}>{error}</Alert>}
     <Stack direction={{ xs: "column", sm: "row" }} spacing={2} sx={{ alignItems: { sm: "center" }, mb: 3 }}>

@@ -14,6 +14,7 @@ export async function database() {
   indexes ??= Promise.all([
     db.collection("orders").createIndex({ requestKey: 1 }, { unique: true }),
     db.collection("orders").createIndex({ "order.createdAt": -1 }),
+    db.collection("orders").createIndex({ "history.paymentStatus": 1, "history.at": 1 }),
     db.collection("orders").createIndex({ "order.status": 1, "order.createdAt": -1 }),
     db.collection("rate_limits").createIndex({ expiresAt: 1 }, { expireAfterSeconds: 0 }),
   ]).then(() => undefined).catch((error: unknown) => { indexes = undefined; throw error; });
