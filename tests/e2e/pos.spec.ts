@@ -15,6 +15,7 @@ test("cashier creates protected, repriced counter sales and recovers lost respon
   expect((await request.post("/api/admin/pos", { headers, data })).status()).toBe(401);
   expect((await request.get("/api/admin/reports")).status()).toBe(401);
   expect((await request.get("/api/admin/reports?format=csv")).status()).toBe(401);
+  expect((await request.get("/api/admin/reports?format=products-csv")).status()).toBe(401);
   expect((await request.post("/api/admin/login", { headers: { origin }, data: { username: "e2e-owner", password: process.env.E2E_ADMIN_PASSWORD } })).status()).toBe(200);
   expect((await request.post("/api/admin/pos", { headers: { ...headers, origin: "https://evil.example" }, data })).status()).toBe(403);
   expect((await request.post("/api/admin/pos", { headers, data: { ...data, total: 1 } })).status()).toBe(400);
@@ -157,6 +158,32 @@ test("cashier creates protected, repriced counter sales and recovers lost respon
   const driverCsv = await (await request.get("/api/admin/reports?format=csv")).text();
   expect(driverCsv).not.toContain("Driver Privacy"); expect(driverCsv).not.toContain("081234560001");
   await page.getByRole("button", { name: "Close order details" }).click();
+  // Complete a configured, quantity-two sale; reports must use saved item value, not delivery totals.
+  const productSale = await request.post("/api/admin/pos", { headers: { origin, "Idempotency-Key": randomUUID() }, data: { ...sale(), paymentReceived: true, items: [{ configuredProduct: { productId: "sugar-cane-juice", configuration: { packageId: "250ml", toppingIds: ["lime"] } }, quantity: 2 }] } });
+  expect(productSale.status()).toBe(201);
+  const productOrder = (await productSale.json()).order;
+  for (const [version, status] of ["preparing", "ready", "completed"].entries()) expect((await request.patch(`/api/admin/orders/${productOrder.id}`, { headers: { origin }, data: { version, status, note: "Product report fixture" } })).status()).toBe(200);
+  const productReportResponse = await request.get("/api/admin/reports");
+  expect(productReportResponse.status()).toBe(200);
+  const productReport = await productReportResponse.json();
+  const juiceRow = productReport.products.find((row: { variantId: string }) => row.variantId === productOrder.items[0].variantId);
+  expect(juiceRow.quantity).toBeGreaterThanOrEqual(2); expect(juiceRow.itemValue).toBe(juiceRow.quantity * 15000);
+  expect(productReport.products.reduce((sum: number, row: { quantity: number }) => sum + row.quantity, 0)).toBe(productReport.productUnits);
+  const productCsvResponse = await request.get("/api/admin/reports?format=products-csv");
+  expect(productCsvResponse.headers()["content-disposition"]).toContain("tebunai-products-");
+  expect(productCsvResponse.headers()["cache-control"]).toContain("no-store");
+  const productCsv = await productCsvResponse.text();
+  expect(productCsv).toContain("250 ml"); expect(productCsv).not.toContain("Driver Privacy"); expect(productCsv).not.toContain("081234560001"); expect(productCsv).not.toContain("Private report customer");
+  expect((await request.get("/api/admin/reports?format=csv&format=products-csv")).status()).toBe(400);
+  await page.goto("/admin/reports");
+  const productSection = page.getByRole("region", { name: "Product sales", exact: true });
+  await expect(productSection.getByRole("heading", { name: "Product sales", exact: true })).toBeVisible();
+  await expect(productSection.getByRole("article").filter({ hasText: "250 ml" }).first()).toContainText("Sugar Cane Juice");
+  await expect(productSection.getByRole("link", { name: "Download product CSV" })).toBeVisible();
+  expect((await new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa", "wcag21aa"]).analyze()).violations).toEqual([]);
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
+  await productSection.getByRole("heading", { name: "Product sales", exact: true }).click();
+  await productSection.screenshot({ path: testInfo.outputPath("product-sales.png") });
   // A new kitchen order appears on polling; editing a drawer pauses refresh.
   await page.clock.install();
   await page.goto("/admin/kitchen");

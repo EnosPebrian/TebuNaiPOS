@@ -28,7 +28,7 @@ export const orderRepository: OrderRepository = {
   async get(id) { const doc = await (await collection()).findOne({ _id: id }); return doc ? publicRecord(doc) : null; },
   async report(range) {
     const period = { $gte: range.start, $lt: range.end };
-    const docs = await (await collection()).find({ $or: [{ "order.createdAt": period }, { history: { $elemMatch: { paymentStatus: "paid", at: period } } }] }, { projection: { _id: 0, "order.id": 1, "order.createdAt": 1, "order.source": 1, "order.status": 1, "order.paymentStatus": 1, "order.subtotal": 1, "order.deliveryFee": 1, "order.total": 1, "history.at": 1, "history.paymentStatus": 1, "history.total": 1 }, maxTimeMS: 10_000 }).limit(5001).toArray();
+    const docs = await (await collection()).find({ $or: [{ "order.createdAt": period }, { history: { $elemMatch: { paymentStatus: "paid", at: period } } }] }, { projection: { _id: 0, "order.id": 1, "order.createdAt": 1, "order.source": 1, "order.status": 1, "order.paymentStatus": 1, "order.subtotal": 1, "order.deliveryFee": 1, "order.total": 1, "order.items.productId": 1, "order.items.productName": 1, "order.items.variantId": 1, "order.items.variantLabel": 1, "order.items.quantity": 1, "order.items.unitPrice": 1, "history.at": 1, "history.paymentStatus": 1, "history.total": 1 }, maxTimeMS: 10_000 }).limit(5001).toArray();
     if (docs.length > 5000) throw new HttpError(413, "This report exceeds 5,000 orders. Choose a shorter date range.");
     return summarizeOrders(docs.map((doc) => ({ ...doc.order, history: doc.history }) as ReportRecord), range);
   },

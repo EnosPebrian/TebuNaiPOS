@@ -121,3 +121,7 @@ Kitchen refresh defaults on every 30 seconds; All orders can opt in. Background 
 After confirming a delivery quote, staff can assign a driver from Order details while the order is confirmed, preparing or ready. Driver phone is optional. A staff note is required to reassign or remove an assigned driver. New handoffs require an assignment, and assignments lock after handoff. Legacy orders already out for delivery can still finish without retroactive assignment.
 
 Use the Driver assignment filter to find assigned/unassigned deliveries. Current assignments appear on staff order cards, details and protected print slips; history preserves each change with the staff actor. Driver details are excluded from public checkout retries and reporting exports. No driver message or payment is sent automatically. See [Delivery assignment](src/docs/FEATURE_PACKS/012%20Delivery%20Assignment.md).
+
+## Product sales
+
+Sales reports now include completed quantities and saved item value by product configuration and serving/bottle size, ranked by units. Toppings are included; delivery is excluded. The selected WIB dates apply to order creation and current completed status, so this is not a completion-date or payment-receipt report. Saved names/prices are preserved; legacy orders missing items trigger an incomplete-data warning. The page shows 50 configurations; Download product CSV exports all without customer or driver details. Existing report access, date limits and query caps apply. See [Product sales](src/docs/FEATURE_PACKS/013%20Product%20Sales.md).

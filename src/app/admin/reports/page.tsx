@@ -9,6 +9,7 @@ import { wibToday, type SalesReport } from "@/domain/order/report";
 import { formatMoney } from "@/domain/money";
 import { statusLabels } from "@/domain/order/lifecycle";
 import StaffNavigation from "@/components/admin/StaffNavigation";
+import ProductSales from "@/components/admin/ProductSales";
 
 export default async function ReportsPage({ searchParams }: { searchParams: Promise<Record<string, string | string[] | undefined>> }) {
   const username = await currentAdmin();
@@ -46,6 +47,7 @@ export default async function ReportsPage({ searchParams }: { searchParams: Prom
       </Box>
       <Alert severity="info" sx={{ mb: 3 }}>Order counts and completed value use orders created in this period and their current status. Payments use the first payment-recorded event, including payments for older orders. Paid cancellations remain included and are shown separately. These figures are not net revenue; refunds, costs and reconciliation are not tracked.</Alert>
       <Button component="a" href={`/api/admin/reports?from=${report.range.from}&to=${report.range.to}&format=csv`} variant="outlined" sx={{ mb: 3 }}>Download CSV</Button>
+      <ProductSales report={report} />
       <Typography component="h2" variant="h5" sx={{ mb: 1 }}>Order references</Typography>
       <Typography sx={{ mb: 2 }}>Showing {Math.min(20, report.rows.length)} of {report.rows.length} matching orders. CSV includes all matching references and no customer contact details. Times in CSV are UTC; its date filters are WIB.</Typography>
       {!report.rows.length && <Alert severity="info">No orders or recorded payments in this period.</Alert>}
