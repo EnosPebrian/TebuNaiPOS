@@ -21,6 +21,7 @@ export default async function PrintOrderPage({ params }: { params: Promise<{ id:
     <article className={styles.slip} aria-label="Order slip">
       <p>{siteConfig.name}</p><h1>Order slip</h1>
       <p>Reference: {order.id}<br />{date} WIB</p>
+      {order.source === "counter" && <p>Counter sale · pickup</p>}
       <p><strong>Status:</strong> {statusLabels[order.status]}<br /><strong>Payment:</strong> {order.paymentStatus === "paid" ? "Paid — recorded by staff" : "Unpaid"}</p>
       {order.status === "pending-merchant-confirmation" && <p>Order request — awaiting merchant confirmation.</p>}
       {order.status === "cancelled" && <p>Cancelled order. Any refund must be handled separately.</p>}

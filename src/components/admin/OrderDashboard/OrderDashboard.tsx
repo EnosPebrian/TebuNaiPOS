@@ -59,7 +59,7 @@ export default function OrderDashboard({ username, initialData, initialError, vi
       <Box><Typography variant="overline" color="primary">TEBU NAI · {username}</Typography><Typography component="h1" variant="h3" sx={{ fontSize: { xs: "2.2rem", md: "3rem" } }}>{view === "kitchen" ? "Kitchen queue" : "Orders"}</Typography></Box>
       <Stack direction="row" spacing={1}><Button onClick={() => { setBusy(true); setError(""); void load(); }} disabled={busy}>Refresh</Button><Button onClick={logout} disabled={busy}>Sign out</Button></Stack>
     </Stack>
-    <Stack direction="row" spacing={1} sx={{ mb: 3 }}><Button component={Link} href="/admin" variant={view === "orders" ? "contained" : "outlined"}>All orders</Button><Button component={Link} href="/admin/kitchen" variant={view === "kitchen" ? "contained" : "outlined"}>Kitchen queue</Button></Stack>
+    <Stack component="nav" aria-label="Staff navigation" direction="row" spacing={1} useFlexGap sx={{ mb: 3, flexWrap: "wrap" }}><Button component={Link} href="/admin" variant={view === "orders" ? "contained" : "outlined"}>All orders</Button><Button component={Link} href="/admin/kitchen" variant={view === "kitchen" ? "contained" : "outlined"}>Kitchen queue</Button><Button component={Link} href="/admin/pos" variant="outlined">Cashier</Button></Stack>
     {view === "kitchen" && <Typography sx={{ mb: 3 }} color="text.primary">Confirmed, preparing and ready orders · oldest first. Refresh to see new work.</Typography>}
     {error && !selected && <Alert severity="error" sx={{ mb: 3 }}>{error}</Alert>}
     <Stack direction={{ xs: "column", sm: "row" }} spacing={2} sx={{ alignItems: { sm: "center" }, mb: 3 }}>
@@ -81,6 +81,7 @@ export default function OrderDashboard({ username, initialData, initialError, vi
         <Stack direction="row" sx={{ justifyContent: "space-between", alignItems: "center" }}><Typography component="h2" variant="h4" id="admin-order-title">Order details</Typography><IconButton aria-label="Close order details" onClick={() => setSelected(null)} disabled={busy}><CloseIcon /></IconButton></Stack>
         {error && <Alert severity="error">{error}</Alert>}
         <Typography sx={{ overflowWrap: "anywhere" }}>Reference: {selected.order.id}</Typography><Chip label={statusLabels[selected.order.status]} />
+        {selected.order.source === "counter" && <Typography>Created at the counter</Typography>}
         <Button component="a" href={`/admin/orders/${selected.order.id}/print`} target="_blank" rel="noopener noreferrer" variant="outlined">Print order slip</Button>
         <Box><Typography component="h3" variant="h6">{selected.order.customer.name}</Typography><Typography>{selected.order.customer.phone}</Typography><Typography>Fulfillment: {selected.order.fulfillment.method}</Typography>{selected.order.fulfillment.method === "delivery" && <Typography sx={{ whiteSpace: "pre-wrap" }}>{selected.order.fulfillment.address}</Typography>}{selected.order.notes && <Typography sx={{ mt: 1, whiteSpace: "pre-wrap" }}>Notes: {selected.order.notes}</Typography>}</Box>
         <Divider />

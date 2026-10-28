@@ -6,6 +6,7 @@ import type { OrderStatus } from "./lifecycle";
 /** An immutable checkout snapshot; the merchant must still confirm this order. */
 export interface Order {
   readonly id: string;
+  readonly source?: "counter";
   readonly createdAt: string;
   readonly customer: Customer;
   readonly fulfillment: Fulfillment;

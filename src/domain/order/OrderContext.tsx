@@ -25,14 +25,14 @@ function providerReducer(state: ProviderState, action: ProviderAction): Provider
   return { ...state, cart: orderReducer(state.cart, action) };
 }
 
-export function OrderProvider({ children }: { children: ReactNode }) {
+export function OrderProvider({ children, storageKey = CART_STORAGE_KEY }: { children: ReactNode; storageKey?: string }) {
   const [state, dispatch] = useReducer(providerReducer, { cart: { items: [] }, hydrated: false });
   const order = state.cart;
 
   useEffect(() => {
     const load = () => {
       try {
-        dispatch({ type: "HYDRATE", items: readPersistedCart(window.localStorage.getItem(CART_STORAGE_KEY)) });
+        dispatch({ type: "HYDRATE", items: readPersistedCart(window.localStorage.getItem(storageKey)) });
       } catch {
         // Shopping still works for browsers that disallow local storage.
         dispatch({ type: "HYDRATE", items: [] });
@@ -40,20 +40,20 @@ export function OrderProvider({ children }: { children: ReactNode }) {
     };
     load();
     const onStorage = (event: StorageEvent) => {
-      if (event.key === CART_STORAGE_KEY || event.key === null) load();
+      if (event.key === storageKey || event.key === null) load();
     };
     window.addEventListener("storage", onStorage);
     return () => window.removeEventListener("storage", onStorage);
-  }, []);
+  }, [storageKey]);
 
   useEffect(() => {
     if (!state.hydrated) return;
     try {
-      window.localStorage.setItem(CART_STORAGE_KEY, JSON.stringify({ version: 1, items: order.items }));
+      window.localStorage.setItem(storageKey, JSON.stringify({ version: 1, items: order.items }));
     } catch {
       // Keep the in-memory cart usable when storage is unavailable or full.
     }
-  }, [order.items, state.hydrated]);
+  }, [order.items, state.hydrated, storageKey]);
 
   const addItem = (item: OrderItem) => {
     if (!state.hydrated) throw new Error("Your cart is loading. Please try again in a moment.");
