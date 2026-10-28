@@ -1,0 +1,13 @@
+# Order discovery and kitchen refresh
+
+The existing All orders and Kitchen queue screens now share an order-filter form. Staff can search the full order reference or a prefix of at least eight characters, and combine current status, payment state, counter/online source, pickup/delivery and an inclusive WIB creation-date range. Leave both dates blank for all history; bounded date selections allow 1–31 days. Apply filters starts at page one; Clear filters restores the view. Filters stay in the current screen's memory and are not retained after a full reload.
+
+The authenticated list API validates each enum, reference length/alphabet, paired dates, pagination and duplicate query parameters. Reference lookup uses the existing string ID index with an exact or anchored-prefix match; arbitrary regex patterns and operator strings are rejected. Customer names and phone numbers are not used as search query strings. Legacy orders without a counter source remain online orders. Kitchen status restrictions and oldest-first ordering remain enforced.
+
+The OrderRepository retains the existing list interface with optional filters and returns the effective page. Pages are clamped to available data after filtering or removal. Status/payment updates reload the list from the server, refill it and refresh counts. Recording payment removes a row from an unpaid filter without leaving an unusable last page. Query/count operations have database timeouts; a payment/date index supports the added filter. No order migration or new production setting is needed.
+
+Kitchen auto refresh defaults on; All orders defaults off. Staff can toggle the 30-second refresh. It runs only while the tab is visible and pauses while an order drawer is open or filter fields have unapplied changes. Returning to a visible tab requests fresh data. One action lock prevents overlapping reads/updates, and unmount aborts an in-flight read. A failed refresh retains the prior list and displays an error; only successful reads update the displayed refresh time. The existing atomic order-version checks remain authoritative; a conflict loads the latest version without clearing the staff note.
+
+Order cards display source/payment state in addition to status. No payments are collected, no new public order endpoint is added and rum remains disabled.
+
+Validation covers filter normalization, invalid/duplicate fields, wildcard rejection, date limits, combined MongoDB filtering, reference-prefix lookup, stale-page correction, unpaid-filter removal after payment, desktop/mobile accessibility, automatic arrival of new kitchen work and preservation of unsaved notes while polling is paused. Browser clock advancement tests the real timer without waiting 30 seconds per check.
