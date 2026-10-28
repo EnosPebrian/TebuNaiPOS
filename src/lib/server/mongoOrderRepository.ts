@@ -38,6 +38,7 @@ export const orderRepository: OrderRepository = {
     if (filters.payment) query["order.paymentStatus"] = filters.payment;
     if (filters.source) query["order.source"] = filters.source === "counter" ? "counter" : { $ne: "counter" };
     if (filters.method) query["order.fulfillment.method"] = filters.method;
+    if (filters.driver) { query["order.fulfillment.method"] = "delivery"; query["order.fulfillment.driver.name"] = filters.driver === "assigned" ? { $exists: true, $ne: "" } : { $exists: false }; }
     if (filters.from && filters.to) { const range = reportRange(filters.from, filters.to); query["order.createdAt"] = { $gte: range.start, $lt: range.end }; }
     const records = await collection();
     const direction = view === "kitchen" ? 1 : -1;

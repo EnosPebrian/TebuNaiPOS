@@ -15,6 +15,9 @@ export async function POST(request: Request) {
     await enforceLimit("checkout", 120, 60_000);
     const fingerprint = createHash("sha256").update(JSON.stringify({ items: order.items, customer: order.customer, fulfillment: order.fulfillment, notes: order.notes })).digest("hex");
     const saved = await orderRepository.create(order, createHash("sha256").update(key).digest("hex"), fingerprint);
-    return json({ order: saved }, 201);
+    // A customer retry may retrieve an order already assigned by staff. Keep
+    // internal driver contact details out of the public checkout response.
+    const customerOrder = saved.fulfillment.method === "delivery" ? { ...saved, fulfillment: { method: "delivery", address: saved.fulfillment.address } } : saved;
+    return json({ order: customerOrder }, 201);
   } catch (error) { return failure(error); }
 }
