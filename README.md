@@ -60,7 +60,7 @@ Staff sign in at `/admin` to view paginated orders, filter by status, review cus
 
 Updates compare the order version atomically, preventing one staff session from silently overwriting another. History records the actor, timestamp, status, payment state, fee/total and staff note. Times display in Asia/Jakarta (WIB). Closed orders cannot be edited through these controls.
 
-Admin pages and every admin API verify the encrypted HTTP-only session. Cookies use SameSite Strict, an eight-hour lifetime and Secure on HTTPS. Password-hash rotation invalidates old sessions. This release supports one configured owner account; individual staff roles, MFA, payment gateways, refunds, inventory, POS, customer accounts and public order tracking remain outside this release. There is no public order-list/detail endpoint.
+Admin pages and every admin API verify the encrypted HTTP-only session. Cookies use SameSite Strict, an eight-hour lifetime and Secure on HTTPS. Password-hash rotation invalidates old sessions. This release supports one configured owner account; individual staff roles, MFA, payment gateways, refunds, inventory, customer accounts and public order tracking remain outside this release. There is no public order-list/detail endpoint.
 
 The database enforces unique request keys and indexes order date/status. Shared database limits allow 10 login attempts per 15-minute bucket and 120 checkout writes/120 admin updates per minute each. These limits are intentionally global for this single-store release and do not trust forwarded IP headers. Hosting traffic controls may be added for higher traffic; they must not replace the application authorization checks.
 
@@ -90,6 +90,12 @@ Validation runs zero-warning ESLint, strict TypeScript, unit tests and a product
 The CI workflow validates and runs browser tests without publishing. For deployment, configure Node.js 24, a private authenticated MongoDB connection, exact HTTPS APP_ORIGIN, fresh admin credentials and the real public merchant/site variables. Run validation and inspect the store/admin flows before owner-authorized deployment. Build-time Google-font access is needed by the existing Next.js font setup. No deployment or payment processing is performed by these scripts.
 
 References: [Next.js authentication](https://nextjs.org/docs/app/guides/authentication), [MongoDB compound operations](https://www.mongodb.com/docs/drivers/node/current/crud/compound-operations/), [iron-session](https://github.com/vvo/iron-session), [local MongoDB runner](https://typegoose.github.io/mongodb-memory-server/docs/guides/quick-start-guide/).
+## Cashier
+
+Staff can open `/admin/pos` to search products, reuse juice configuration, and save pickup counter sales. The basket is stored separately from the customer cart. A phone is optional for a walk-in customer; online checkout still requires one. Counter sales are confirmed into the kitchen queue. Payment remains unpaid unless staff explicitly check that it has been received. Prices and availability are validated again by the server; rum remains unavailable.
+
+The exact save request is retained in the current tab for safe retries after network failures or reloads. Retry an uncertain save before starting another sale. After success, use Print order slip or New sale. Optional customer details remain on the cashier device while a request is retained; use a trusted device. This release records manual payments only. See [Cashier POS](src/docs/FEATURE_PACKS/009%20Cashier%20POS.md).
+
 ## Kitchen queue and print slips
 
 Staff can open `/admin/kitchen` for confirmed, preparing and ready orders sorted oldest first. Pending requests must be confirmed from All orders. Orders leave the queue when cancelled, completed or handed off for delivery. Status changes reuse the existing version-checked controls.

@@ -11,9 +11,9 @@ const publicRecord = (doc: OrderDocument): ManagedOrder => ({ order: doc.order, 
 async function collection() { return (await database()).collection<OrderDocument>("orders"); }
 
 export const orderRepository: OrderRepository = {
-  async create(order, requestKey, fingerprint) {
+  async create(order, requestKey, fingerprint, actor = "customer") {
     const records = await collection();
-    const document: OrderDocument = { _id: order.id, requestKey, fingerprint, order, version: 0, updatedAt: order.createdAt, history: [{ at: order.createdAt, actor: "customer", status: order.status, paymentStatus: order.paymentStatus, deliveryFee: order.deliveryFee, total: order.total, note: "Order request saved at checkout." }] };
+    const document: OrderDocument = { _id: order.id, requestKey, fingerprint, order, version: 0, updatedAt: order.createdAt, history: [{ at: order.createdAt, actor, status: order.status, paymentStatus: order.paymentStatus, deliveryFee: order.deliveryFee, total: order.total, note: order.source === "counter" ? `Counter order accepted by staff. Payment ${order.paymentStatus === "paid" ? "received and recorded" : "not received"}.` : "Order request saved at checkout." }] };
     try { await records.insertOne(document); return order; }
     catch (error) {
       if (!(error && typeof error === "object" && "code" in error && error.code === 11000)) throw error;

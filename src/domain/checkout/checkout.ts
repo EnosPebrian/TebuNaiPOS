@@ -51,8 +51,12 @@ export function createCheckoutOrder(
   items: readonly OrderItem[],
   details: CheckoutDetails,
   metadata: { id: string; createdAt: string },
+  channel: "online" | "counter" = "online",
 ): Order {
-  if (Object.keys(validateCheckoutDetails(details)).length) {
+  const errors = validateCheckoutDetails(details);
+  if (channel === "counter" && !details.phone.trim()) delete errors.phone;
+  if (channel === "counter" && details.method !== "pickup") throw new Error("Counter orders must use pickup.");
+  if (Object.keys(errors).length) {
     throw new Error("Check the customer and delivery details before continuing.");
   }
   if (!items.length) throw new Error("Add an item to your cart before checkout.");
@@ -85,7 +89,8 @@ export function createCheckoutOrder(
     subtotal,
     deliveryFee: fulfillment.method === "pickup" ? 0 : null,
     total: fulfillment.method === "pickup" ? subtotal : null,
-    status: "pending-merchant-confirmation",
+    ...(channel === "counter" ? { source: "counter" as const } : {}),
+    status: channel === "counter" ? "confirmed" : "pending-merchant-confirmation",
     paymentStatus: "unpaid",
   });
 }

@@ -23,7 +23,7 @@ import ToppingSelector from "./ToppingSelector";
 interface ProductConfiguratorProps {
   open: boolean;
   onClose: () => void;
-  product: Product;
+  product: Pick<Product, "name" | "description">;
   configuredProduct: ConfiguredProduct;
   onAdded?: () => void;
 }
