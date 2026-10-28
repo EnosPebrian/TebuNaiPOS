@@ -45,9 +45,7 @@ export function summarizeOrders(records: readonly ReportRecord[], range: ReportR
       report.receipts++; report.receivedValue += paid.total!;
       if (record.status === "cancelled") { report.cancelledReceipts++; report.cancelledReceivedValue += paid.total!; }
     }
-    const { history: _history, ...order } = record;
-    void _history;
-    report.rows.push({ ...order, firstPaidAt: paid?.at ?? null, createdInPeriod, receivedInPeriod, receivedAmount: receivedInPeriod ? paid.total : null });
+    report.rows.push({ id: record.id, createdAt: record.createdAt, source: record.source, status: record.status, paymentStatus: record.paymentStatus, subtotal: record.subtotal, deliveryFee: record.deliveryFee, total: record.total, firstPaidAt: paid?.at ?? null, createdInPeriod, receivedInPeriod, receivedAmount: receivedInPeriod ? paid.total : null });
   }
   report.rows.sort((a, b) => b.createdAt.localeCompare(a.createdAt) || a.id.localeCompare(b.id));
   return report;

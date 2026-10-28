@@ -46,4 +46,10 @@ describe("order and payment reporting", () => {
     expect(csv).toContain('"19000","","",""');
     expect(csv).not.toContain("history"); expect(csv).not.toContain("customer"); expect(csv).toContain("Period from WIB");
   });
+  it("does not leak contact fields even if a caller supplies a wider record", () => {
+    const wider = { ...record(), customer: { name: "Private customer", phone: "081234567890" }, notes: "Private note" };
+    const result = summarizeOrders([wider], range);
+    expect(JSON.stringify(result)).not.toContain("Private");
+    expect(JSON.stringify(result)).not.toContain("081234567890");
+  });
 });
