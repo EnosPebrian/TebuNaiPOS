@@ -5,6 +5,7 @@ import { Alert, Box, Button, Checkbox, Chip, Container, Divider, Drawer, FormCon
 import CloseIcon from "@mui/icons-material/Close";
 import StaffNavigation from "@/components/admin/StaffNavigation";
 import OrderFiltersForm from "@/components/admin/OrderFilters";
+import DriverAssignment from "@/components/admin/DriverAssignment";
 import { orderQueryParams, parseOrderQuery, type OrderFilters } from "@/domain/order/query";
 import { formatMoney } from "@/domain/money";
 import { type ManagedOrder, type OrderUpdate, kitchenStatuses, nextStatuses, statusLabels } from "@/domain/order/lifecycle";
@@ -68,7 +69,7 @@ export default function OrderDashboard({ username, initialData, initialError, vi
       const result = await response.json() as ManagedOrder & { error?: string };
       if (response.status === 401) { router.replace("/admin/login"); return; }
       if (!response.ok) { if (response.status === 409) applyListing(await fetchOrders(page, filters)); throw new Error(result.error ?? "Unable to change the order."); }
-      if ((filters.status && result.order.status !== filters.status) || (filters.payment && result.order.paymentStatus !== filters.payment) || (view === "kitchen" && !kitchenStatuses.includes(result.order.status))) { setSelected(null); setOrders((previous) => previous.filter((entry) => entry.order.id !== result.order.id)); }
+      if ((filters.status && result.order.status !== filters.status) || (filters.payment && result.order.paymentStatus !== filters.payment) || (filters.driver && (filters.driver === "assigned") !== Boolean(result.order.fulfillment.method === "delivery" && result.order.fulfillment.driver)) || (view === "kitchen" && !kitchenStatuses.includes(result.order.status))) { setSelected(null); setOrders((previous) => previous.filter((entry) => entry.order.id !== result.order.id)); }
       else { setSelected(result); setOrders((previous) => previous.map((entry) => entry.order.id === result.order.id ? result : entry)); }
       setNote(""); setFee("");
       try { applyListing(await fetchOrders(page, filters)); }
@@ -102,6 +103,7 @@ export default function OrderDashboard({ username, initialData, initialError, vi
       {orders.map((record) => <Box key={record.order.id} component="article" sx={{ p: 3, border: "1px solid", borderColor: "divider", borderRadius: 3, bgcolor: "background.paper" }}>
         <Stack direction={{ xs: "column", sm: "row" }} spacing={2} sx={{ justifyContent: "space-between", alignItems: { sm: "center" } }}>
           <Box><Typography component="h2" variant="h6">{record.order.customer.name}</Typography><Typography variant="body2" color="text.secondary">{displayDate(record.order.createdAt)} · {record.order.fulfillment.method}</Typography><Typography variant="body2" sx={{ overflowWrap: "anywhere" }}>Reference: {record.order.id}</Typography></Box>
+          {record.order.fulfillment.method === "delivery" && <Typography variant="body2">Driver: {record.order.fulfillment.driver?.name ?? "Unassigned"}</Typography>}
           <Stack spacing={1}><Chip label={statusLabels[record.order.status]} /><Typography variant="body2">{record.order.paymentStatus === "paid" ? "Paid" : "Unpaid"} · {record.order.source === "counter" ? "Counter" : "Online"}</Typography><Typography sx={{ fontWeight: 700 }}>{record.order.total === null ? `${formatMoney(record.order.subtotal)} + delivery quote` : formatMoney(record.order.total)}</Typography><Button variant="outlined" disabled={busy} onClick={() => { setSelected(record); setNote(""); setFee(""); setError(""); }}>Manage order</Button></Stack>
         </Stack>
       </Box>)}
@@ -118,15 +120,17 @@ export default function OrderDashboard({ username, initialData, initialError, vi
         <Divider />
         {selected.order.items.map((item) => <Box key={item.id}><Typography sx={{ fontWeight: 700 }}>{item.productName} × {item.quantity}</Typography><Typography variant="body2">{item.variantLabel}</Typography><Typography>{formatMoney(item.unitPrice)} each · {formatMoney(item.unitPrice * item.quantity)}</Typography></Box>)}
         <Divider /><Typography>Items subtotal: {formatMoney(selected.order.subtotal)}</Typography><Typography>Delivery fee: {selected.order.deliveryFee === null ? "Not quoted" : formatMoney(selected.order.deliveryFee)}</Typography><Typography sx={{ fontWeight: 700 }}>Total: {selected.order.total === null ? "Pending delivery quote" : formatMoney(selected.order.total)}</Typography><Typography>Payment: {selected.order.paymentStatus}</Typography>
+        {selected.order.fulfillment.method === "delivery" && <Box><Typography component="h3" variant="h6">Delivery driver</Typography><Typography>{selected.order.fulfillment.driver?.name ?? "Unassigned"}</Typography>{selected.order.fulfillment.driver?.phone && <Typography>{selected.order.fulfillment.driver.phone}</Typography>}</Box>}
         {nextStatuses(selected.order).length > 0 && <>
           {selected.order.status === "pending-merchant-confirmation" && selected.order.fulfillment.method === "delivery" && <TextField label="Delivery fee (IDR)" value={fee} type="number" onChange={(event) => setFee(event.target.value)} slotProps={{ htmlInput: { min: 0, max: 1000000, step: 1 } }} disabled={busy} helperText="Confirm the quote with the customer before confirming this order." />}
-          <TextField label="Staff note" value={note} multiline minRows={2} onChange={(event) => setNote(event.target.value)} disabled={busy} slotProps={{ htmlInput: { maxLength: 500 } }} helperText="A reason is required for cancellation. Notes are kept in the order history." />
+          <TextField label="Staff note" value={note} multiline minRows={2} onChange={(event) => setNote(event.target.value)} disabled={busy} slotProps={{ htmlInput: { maxLength: 500 } }} helperText="A reason is required for cancellation or changing an assigned driver. Notes are kept in the order history." />
+          {selected.order.fulfillment.method === "delivery" && ["confirmed", "preparing", "ready"].includes(selected.order.status) && <DriverAssignment key={`${selected.order.id}:${JSON.stringify(selected.order.fulfillment.driver)}`} current={selected.order.fulfillment.driver} busy={busy} onAssign={(driver) => void change({ driver })} />}
           <Stack direction="row" spacing={1} useFlexGap sx={{ flexWrap: "wrap" }}>{nextStatuses(selected.order).map((value) => <Button key={value} variant={value === "cancelled" ? "outlined" : "contained"} color={value === "cancelled" ? "error" : "primary"} disabled={busy} onClick={() => void change({ status: value, ...(value === "confirmed" && fee !== "" ? { deliveryFee: Number(fee) } : {}) })}>{value === "cancelled" ? "Cancel order" : `Mark ${statusLabels[value].toLowerCase()}`}</Button>)}</Stack>
           {selected.order.paymentStatus === "unpaid" && selected.order.status !== "pending-merchant-confirmation" && <Button variant="outlined" disabled={busy} onClick={() => void change({ paymentStatus: "paid" })}>Record payment received</Button>}
           <Typography variant="body2" color="text.secondary">Payment recording is manual. It does not charge a customer or issue a refund.</Typography>
         </>}
         <Divider /><Typography component="h3" variant="h6">Order history</Typography>
-        {[...selected.history].reverse().map((event, index) => <Box key={`${event.at}-${index}`}><Typography variant="body2" sx={{ fontWeight: 700 }}>{statusLabels[event.status]} · {event.paymentStatus}</Typography><Typography variant="body2" color="text.secondary">{event.actor} · {displayDate(event.at)}</Typography>{event.note && <Typography variant="body2">{event.note}</Typography>}</Box>)}
+        {[...selected.history].reverse().map((event, index) => <Box key={`${event.at}-${index}`}><Typography variant="body2" sx={{ fontWeight: 700 }}>{statusLabels[event.status]} · {event.paymentStatus}</Typography><Typography variant="body2" color="text.secondary">{event.actor} · {displayDate(event.at)}</Typography>{event.driver ? <Typography variant="body2">Driver: {event.driver.name}{event.driver.phone ? ` · ${event.driver.phone}` : ""}</Typography> : event.driver === null && <Typography variant="body2">Driver unassigned</Typography>}{event.note && <Typography variant="body2">{event.note}</Typography>}</Box>)}
       </Stack>}
     </Drawer>
   </Container>;

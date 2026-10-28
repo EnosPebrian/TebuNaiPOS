@@ -115,3 +115,9 @@ The existing GitHub remote is EnosPebrian/TebuNaiPOS and the Vercel project is t
 All orders and Kitchen queue support reference-prefix search (at least 8 characters), payment/source/fulfillment/status filters and optional paired WIB creation dates (up to 31 days). Apply filters starts at page one; Clear filters restores the view. Updates reload matching rows and counts, and the server corrects a page that no longer exists. Cards show payment and source. Filters reset on a full reload.
 
 Kitchen refresh defaults on every 30 seconds; All orders can opt in. Background refresh pauses while the tab is hidden, an order drawer is open or filters are being edited. Failures retain the prior data and show an error. The last-updated time changes only after a successful read. Existing version checks still protect staff changes. See [Order operations](src/docs/FEATURE_PACKS/011%20Order%20Operations.md).
+
+## Delivery assignment
+
+After confirming a delivery quote, staff can assign a driver from Order details while the order is confirmed, preparing or ready. Driver phone is optional. A staff note is required to reassign or remove an assigned driver. New handoffs require an assignment, and assignments lock after handoff. Legacy orders already out for delivery can still finish without retroactive assignment.
+
+Use the Driver assignment filter to find assigned/unassigned deliveries. Current assignments appear on staff order cards, details and protected print slips; history preserves each change with the staff actor. Driver details are excluded from public checkout retries and reporting exports. No driver message or payment is sent automatically. See [Delivery assignment](src/docs/FEATURE_PACKS/012%20Delivery%20Assignment.md).

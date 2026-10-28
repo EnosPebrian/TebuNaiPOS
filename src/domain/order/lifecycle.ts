@@ -1,4 +1,5 @@
 import type { Order } from "./Order";
+import { normalizeDeliveryDriver, type DeliveryDriver } from "@/domain/fulfillment/fulfillment";
 
 export const orderStatuses = ["pending-merchant-confirmation", "confirmed", "preparing", "ready", "picked-up", "completed", "cancelled"] as const;
 export type OrderStatus = (typeof orderStatuses)[number];
@@ -13,6 +14,7 @@ export interface OrderUpdate {
   readonly status?: OrderStatus;
   readonly deliveryFee?: number;
   readonly paymentStatus?: "paid";
+  readonly driver?: DeliveryDriver | null;
   readonly note: string;
 }
 export interface OrderEvent {
@@ -23,6 +25,7 @@ export interface OrderEvent {
   readonly deliveryFee: number | null;
   readonly total: number | null;
   readonly note: string;
+  readonly driver?: DeliveryDriver | null;
 }
 export interface ManagedOrder {
   readonly order: Order;
@@ -56,12 +59,21 @@ export function updateOrder(order: Order, update: OrderUpdate): Order {
   const status = update.status ?? order.status;
   if (status === "confirmed" && deliveryFee === null) throw new Error("Quote the delivery fee before confirming this order.");
   const total = deliveryFee === null ? null : order.subtotal + deliveryFee;
+  let fulfillment = order.fulfillment;
+  if (update.driver !== undefined) {
+    if (fulfillment.method !== "delivery" || !["confirmed", "preparing", "ready"].includes(order.status) || status === "cancelled") throw new Error("Driver assignments can only change for confirmed delivery orders before handoff.");
+    const driver = update.driver === null ? undefined : normalizeDeliveryDriver(update.driver);
+    if (JSON.stringify(fulfillment.driver ?? null) === JSON.stringify(driver ?? null)) throw new Error("Choose a different driver assignment.");
+    if (fulfillment.driver && !update.note.trim()) throw new Error("Enter a staff note when reassigning or removing a driver.");
+    fulfillment = Object.freeze({ method: "delivery", address: fulfillment.address, ...(driver ? { driver } : {}) });
+  }
+  if (status === "picked-up" && order.status !== "picked-up" && (fulfillment.method !== "delivery" || !fulfillment.driver)) throw new Error("Assign a driver before marking this order out for delivery.");
   let paymentStatus = order.paymentStatus;
   if (update.paymentStatus) {
     if (order.paymentStatus === "paid" || order.status === "pending-merchant-confirmation" || status === "cancelled" || total === null) throw new Error("Payment can only be recorded once for a confirmed order with a final total.");
     paymentStatus = "paid";
   }
   if (status === "completed" && paymentStatus !== "paid") throw new Error("Record payment received before completing this order.");
-  if (update.status === undefined && update.deliveryFee === undefined && update.paymentStatus === undefined) throw new Error("Choose an order change.");
-  return Object.freeze({ ...order, status, paymentStatus, deliveryFee, total });
+  if (update.status === undefined && update.deliveryFee === undefined && update.paymentStatus === undefined && update.driver === undefined) throw new Error("Choose an order change.");
+  return Object.freeze({ ...order, status, paymentStatus, deliveryFee, total, fulfillment });
 }

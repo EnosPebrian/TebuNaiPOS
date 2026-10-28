@@ -27,6 +27,7 @@ export default async function PrintOrderPage({ params }: { params: Promise<{ id:
       {order.status === "cancelled" && <p>Cancelled order. Any refund must be handled separately.</p>}
       <h2>Customer and fulfillment</h2><p>{order.customer.name}<br />{order.customer.phone}<br />{order.fulfillment.method === "pickup" ? "Pickup" : "Delivery"}</p>
       {order.fulfillment.method === "delivery" && <p style={{ whiteSpace: "pre-wrap" }}>{order.fulfillment.address}</p>}
+      {order.fulfillment.method === "delivery" && <><h2>Delivery driver</h2><p>{order.fulfillment.driver?.name ?? "Unassigned"}{order.fulfillment.driver?.phone && <><br />{order.fulfillment.driver.phone}</>}</p></>}
       {order.notes && <p style={{ whiteSpace: "pre-wrap" }}>Notes: {order.notes}</p>}
       <table className={styles.lines}><thead><tr><th scope="col">Item</th><th scope="col">Qty</th><th scope="col">Amount</th></tr></thead><tbody>{order.items.map((item) => <tr key={item.id}><td><strong>{item.productName}</strong><br />{item.variantLabel}<br />{formatMoney(item.unitPrice)} each</td><td>{item.quantity}</td><td>{formatMoney(item.quantity * item.unitPrice)}</td></tr>)}</tbody></table>
       <div className={styles.summary}><span>Items subtotal</span><span>{formatMoney(order.subtotal)}</span></div>

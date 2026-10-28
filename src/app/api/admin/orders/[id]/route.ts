@@ -19,7 +19,7 @@ export async function PATCH(request: Request, context: Context) {
     if (existing.version !== input.version) throw new HttpError(409, "This order changed in another session. Refresh before editing.");
     let order;
     try { order = updateOrder(existing.order, input); } catch (error) { throw new HttpError(400, error instanceof Error ? error.message : "Invalid order change."); }
-    const result = await orderRepository.update(id, input.version, order, { actor, at: new Date().toISOString(), status: order.status, paymentStatus: order.paymentStatus, deliveryFee: order.deliveryFee, total: order.total, note: input.note });
+    const result = await orderRepository.update(id, input.version, order, { actor, at: new Date().toISOString(), status: order.status, paymentStatus: order.paymentStatus, deliveryFee: order.deliveryFee, total: order.total, note: input.note, ...(order.fulfillment.method === "delivery" ? { driver: order.fulfillment.driver ?? null } : {}) });
     if (!result) throw new HttpError(409, "This order changed in another session. Refresh before editing.");
     return json(result);
   } catch (error) { return failure(error); }
